@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: backend
+  datasource:
+    url: jdbc:postgresql://${SQL_DB_HOST:localhost}:${SQL_DB_PORT:5432}/mirakl
+    username: ${SQL_DB_USERNAME:postgres}
+    password: ${SQL_DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
+        hbm2ddl:
+          auto: validate

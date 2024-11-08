@@ -2,7 +2,7 @@ spring:
   application:
     name: backend
   datasource:
-    url: jdbc:postgresql://${SQL_DB_HOST:localhost}:${SQL_DB_PORT:5432}/mirakl
+    url: jdbc:postgresql://${SQL_DB_HOST:localhost}:${SQL_DB_PORT:5432}/memory
     username: ${SQL_DB_USERNAME:postgres}
     password: ${SQL_DB_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
@@ -14,4 +14,4 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
         hbm2ddl:
-          auto: validate
+          auto: update

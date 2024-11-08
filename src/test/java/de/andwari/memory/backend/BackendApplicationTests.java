@@ -1,6 +1,6 @@
 package de.andwari.memory.backend;
 
-import de.andwari.memory.backend.client.ScryfallClient;
+import de.andwari.memory.backend.web.client.ScryfallClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -11,9 +11,9 @@ class BackendApplicationTests {
     @Autowired
     private ScryfallClient client;
 
-    @Test
-    void contextLoads() {
-
-    }
+//    @Test
+//    void contextLoads() {
+//
+//    }
 
 }

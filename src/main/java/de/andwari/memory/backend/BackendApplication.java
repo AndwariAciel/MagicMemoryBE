@@ -5,7 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@EnableFeignClients("de.andwari.memory.backend.client")
+@EnableFeignClients("de.andwari.memory.backend.web.client")
 public class BackendApplication {
 
     public static void main(String[] args) {

@@ -1,17 +1,15 @@
 package de.andwari.memory.backend.db.entity;
 
-import static jakarta.persistence.EnumType.STRING;
-import static jakarta.persistence.GenerationType.IDENTITY;
-
-import de.andwari.memory.backend.model.enums.SetType;
+import de.andwari.memory.backend.model.enums.CardLayout;
+import de.andwari.memory.backend.model.enums.CardType;
 import jakarta.persistence.*;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Data
 @Builder
@@ -19,8 +17,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "set")
-public class SetEntity {
+@Table(name = "card")
+public class CardEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -35,16 +33,19 @@ public class SetEntity {
     @EqualsAndHashCode.Exclude
     private LocalDateTime updatedAt;
 
-    private String scryfallId;
     private String name;
-    private String code;
-    private String url;
-    private LocalDate releaseDate;
+    private String scryfallId;
 
-    @Enumerated(STRING)
-    private SetType type;
-    private int cards;
-    private String iconUrl;
-    private boolean released;
+    @Enumerated(EnumType.STRING)
+    private CardType cardType;
+
+    @Enumerated(EnumType.STRING)
+    private CardLayout cardLayout;
+
+    @ManyToOne
+    @JoinColumn(name = "set_id", nullable = false)
+    private SetEntity set;
+
+    private String pictureUri;
 
 }

@@ -17,7 +17,8 @@ public class SetUpdateService {
 
     public void updateSets() {
 
-        scryfallClient.getAllSets().getData()
+        scryfallClient.getAllSets()
+                .getData()
                 .stream()
                 .map(setMapper::toEntity)
                 .forEach(

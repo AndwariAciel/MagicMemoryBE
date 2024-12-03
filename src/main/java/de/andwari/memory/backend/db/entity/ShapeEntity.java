@@ -1,18 +1,16 @@
 package de.andwari.memory.backend.db.entity;
 
-import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
+import de.andwari.memory.backend.model.enums.ShapeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +25,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "mask")
-public class MaskEntity {
+@Table(name = "shape")
+public class ShapeEntity {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -43,11 +41,11 @@ public class MaskEntity {
     @EqualsAndHashCode.Exclude
     private LocalDateTime updatedAt;
 
-    @Column(unique = true)
-    private String name;
+    @Enumerated(STRING)
+    private ShapeType type;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
-    @JoinColumn(name = "mask_id")
-    private List<ShapeEntity> shapes;
-
+    private int x;
+    private int y;
+    private int width;
+    private int height;
 }

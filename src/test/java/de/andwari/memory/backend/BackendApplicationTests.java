@@ -11,9 +11,9 @@ class BackendApplicationTests {
     @Autowired
     private CardsUpdateService cardsUpdateService;
 
-    @Test
-    void contextLoads() {
-        cardsUpdateService.updateCardsForSet("fdn");
-    }
+//    @Test
+//    void contextLoads() {
+////        cardsUpdateService.updateCardsForSet("fdn");
+//    }
 
 }

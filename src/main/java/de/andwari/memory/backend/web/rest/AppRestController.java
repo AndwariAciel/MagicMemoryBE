@@ -19,8 +19,8 @@ public class AppRestController {
     }
 
     @PostMapping("update-cards/{set-code}")
-    public void updateCardsForSet(@PathVariable("set-code") String setId) {
-        cardsUpdateService.updateCardsForSet(setId);
+    public void updateCardsForSet(@PathVariable("set-code") String setCode) {
+        cardsUpdateService.updateCardsForSet(setCode);
     }
 
 }

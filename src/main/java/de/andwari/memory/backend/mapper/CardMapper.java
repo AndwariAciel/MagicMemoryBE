@@ -26,6 +26,7 @@ public abstract class CardMapper {
     @Mapping(target = "cardType", source = "card.typeLine")
     @Mapping(target = "cardLayout", source = "card.layout")
     @Mapping(target = "pictureUri", source = "card.imageUris.normal")
+    @Mapping(target = "manaCost", source = "card.manaCost")
     @Mapping(target = "set", source = "set")
     @Mapping(ignore = true, target = "id")
     @Mapping(ignore = true, target = "createdAt")

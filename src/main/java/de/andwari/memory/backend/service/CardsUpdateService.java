@@ -1,15 +1,15 @@
 package de.andwari.memory.backend.service;
 
+import static de.andwari.memory.backend.service.QueryService.getSetSearch;
+
 import de.andwari.memory.backend.db.entity.CardEntity;
+import de.andwari.memory.backend.db.repository.CardRepository;
 import de.andwari.memory.backend.db.repository.SetRepository;
 import de.andwari.memory.backend.mapper.CardMapper;
 import de.andwari.memory.backend.web.client.ScryfallClient;
+import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-
-import static de.andwari.memory.backend.service.QueryService.getSetSearch;
 
 @Service
 @RequiredArgsConstructor
@@ -18,6 +18,8 @@ public class CardsUpdateService {
     private final ScryfallClient scryfallClient;
     private final SetRepository setRepository;
     private final CardMapper cardMapper;
+    private final CardRepository cardRepository;
+    private final MaskMatcher maskMatcher;
 
     public void updateCardsForSet(String setCode) {
         var set = setRepository.findByCode(setCode)
@@ -34,6 +36,7 @@ public class CardsUpdateService {
             cardList.addAll(
                     cards.getData().stream()
                             .map(card -> cardMapper.toEntity(card, set))
+                            .peek(maskMatcher::findFittingDefaultMask)
                             .toList()
             );
 
@@ -45,8 +48,18 @@ public class CardsUpdateService {
             }
         } while (hasMore);
 
-        for (CardEntity cardEntity : cardList) {
-            System.out.println(cardEntity.getName());
-        }
+        cardList.forEach(this::updateCard);
     }
+
+    private void updateCard(CardEntity card) {
+        cardRepository.findByScryfallId(card.getScryfallId())
+                .ifPresentOrElse(dbCard -> {
+                    if (dbCard.hashCode() != card.hashCode()) {
+                        card.setId(dbCard.getId());
+                        card.setMask(dbCard.getMask());
+                        cardRepository.save(card);
+                    }
+                }, () -> cardRepository.save(card));
+    }
+
 }

@@ -45,6 +45,7 @@ public class SetEntity {
     private SetType type;
     private int cards;
     private String iconUrl;
+    @EqualsAndHashCode.Exclude
     private boolean released;
 
 }

@@ -15,3 +15,6 @@ spring:
         implicit_naming_strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyJpaCompliantImpl
         hbm2ddl:
           auto: update
+
+scryfall:
+  url: https://api.scryfall.com

@@ -2,7 +2,7 @@ package de.andwari.memory.backend.scheduler;
 
 import de.andwari.memory.backend.scheduler.task.GetSetsTask;
 import de.andwari.memory.backend.scheduler.task.ScheduledTask;
-import de.andwari.memory.backend.scheduler.task.Tasks;
+import de.andwari.memory.backend.scheduler.task.Task;
 import jakarta.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,18 +15,18 @@ public class TaskProvider {
 
     private final GetSetsTask getSetsTask;
 
-    private static final Map<Tasks, ScheduledTask> TASKS = new HashMap<>();
+    private static final Map<Task, ScheduledTask> TASKS = new HashMap<>();
 
     @PostConstruct
     private void init() {
         TASKS.put(getSetsTask.getName(), getSetsTask);
     }
 
-    public ScheduledTask getTask(Tasks name) {
+    public ScheduledTask getTask(Task name) {
         return TASKS.get(name);
     }
 
-    public Map<Tasks, ScheduledTask> getTasks() {
+    public Map<Task, ScheduledTask> getTasks() {
         return TASKS;
     }
 }

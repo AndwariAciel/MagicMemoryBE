@@ -3,10 +3,9 @@ package de.andwari.memory.backend.mapper;
 import de.andwari.memory.backend.db.entity.SetEntity;
 import de.andwari.memory.backend.model.enums.SetType;
 import de.andwari.memory.backend.model.scryfall.sets.Set;
+import java.util.stream.Stream;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.stream.Stream;
 
 @Mapper(componentModel = "spring")
 public abstract class SetMapper {

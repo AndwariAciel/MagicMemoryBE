@@ -1,6 +1,6 @@
 package de.andwari.memory.backend.scheduler.task;
 
-public enum Tasks {
+public enum Task {
 
     GET_SETS
 }

@@ -2,10 +2,11 @@ spring:
   application:
     name: backend
   datasource:
+    driver-class-name: ${SQL_DB_DRIVER:org.postgresql.Driver}
     url: jdbc:postgresql://${SQL_DB_URL:localhost}:${SQL_DB_PORT:5432}/memory
-    username: ${SQL_DB_USERNAME:andwari}
-    password: ${SQL_DB_PASSWORD:andwari}
-    driver-class-name: org.postgresql.Driver
+    username: ${SQL_DB_USERNAME:test}
+    password: ${SQL_DB_PASSWORD:test}
+
 
   jpa:
     open-in-view: false
@@ -16,5 +17,6 @@ spring:
         hbm2ddl:
           auto: update
 
+
 scryfall:
-  url: https://api.scryfall.com
+  url: http://localhost:${wiremock.server.port}

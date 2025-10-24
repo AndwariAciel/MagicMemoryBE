@@ -4,5 +4,7 @@ public interface ScheduledTask extends Runnable {
 
     void run();
 
-    Tasks getName();
+    Task getName();
+
+    String getDefaultCron();
 }

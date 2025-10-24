@@ -7,7 +7,6 @@ import de.andwari.memory.backend.db.repository.CardRepository;
 import de.andwari.memory.backend.db.repository.SetRepository;
 import de.andwari.memory.backend.mapper.CardMapper;
 import de.andwari.memory.backend.web.client.ScryfallClient;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,20 +24,16 @@ public class CardsUpdateService {
         var set = setRepository.findByCode(setCode)
                 .orElseThrow(() -> new IllegalArgumentException("Could not find set with code " + setCode));
 
-        var cardList = new ArrayList<CardEntity>();
-
         boolean hasMore;
         int page = 1;
 
         do {
             var cards = scryfallClient.getCards(getSetSearch(setCode), page);
             hasMore = cards.isHasMore();
-            cardList.addAll(
-                    cards.getData().stream()
-                            .map(card -> cardMapper.toEntity(card, set))
-                            .peek(maskMatcher::findFittingDefaultMask)
-                            .toList()
-            );
+            cards.getData().stream()
+                    .map(card -> cardMapper.toEntity(card, set))
+                    .peek(maskMatcher::findFittingDefaultMask)
+                    .forEach(this::updateCard);
 
             page++;
             try {
@@ -47,8 +42,6 @@ public class CardsUpdateService {
                 throw new RuntimeException(e);
             }
         } while (hasMore);
-
-        cardList.forEach(this::updateCard);
     }
 
     private void updateCard(CardEntity card) {

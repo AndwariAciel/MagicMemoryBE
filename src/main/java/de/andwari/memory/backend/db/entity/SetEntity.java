@@ -40,7 +40,6 @@ public class SetEntity {
     private String code;
     private String url;
     private LocalDate releaseDate;
-
     @Enumerated(STRING)
     private SetType type;
     private int cards;

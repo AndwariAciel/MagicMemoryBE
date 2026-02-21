@@ -1,16 +1,22 @@
 package de.andwari.memory.backend.web.rest;
 
-import de.andwari.memory.backend.db.entity.SetEntity;
+import de.andwari.memory.backend.model.rest.SetModel;
 import de.andwari.memory.backend.service.CardsUpdateService;
 import de.andwari.memory.backend.service.SetService;
 import de.andwari.memory.backend.service.SetUpdateService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("admin")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class AppRestController {
 
     private final SetUpdateService setUpdateService;
@@ -27,8 +33,8 @@ public class AppRestController {
         cardsUpdateService.updateCardsForSet(setCode);
     }
 
-    @GetMapping("sets")
-    public List<SetEntity> getSetList() {
+    @GetMapping(value = "sets", produces = { "application/json" })
+    public List<SetModel> getSetList() {
         return setService.getSets();
     }
 

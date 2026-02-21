@@ -53,6 +53,7 @@ public class CardEntity {
     @JoinColumn(name = "mask_id")
     @EqualsAndHashCode.Exclude
     private MaskEntity mask;
+    private Boolean ready;
 
 
 }

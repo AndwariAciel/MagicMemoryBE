@@ -2,6 +2,7 @@ package de.andwari.memory.backend.mapper;
 
 import de.andwari.memory.backend.db.entity.SetEntity;
 import de.andwari.memory.backend.model.enums.SetType;
+import de.andwari.memory.backend.model.rest.SetModel;
 import de.andwari.memory.backend.model.scryfall.sets.Set;
 import java.util.stream.Stream;
 import org.mapstruct.Mapper;
@@ -21,6 +22,11 @@ public abstract class SetMapper {
     @Mapping(ignore = true, target = "updatedAt")
     @Mapping(ignore = true, target = "released")
     public abstract SetEntity toEntity(Set set);
+
+    @Mapping(target = "cardsReady", source = "cardsReady")
+    public abstract SetModel addReadyCards(SetModel set, long cardsReady);
+
+    public abstract SetModel toModel(SetEntity set);
 
     protected SetType getSetType(String type) {
         return Stream.of(SetType.values())

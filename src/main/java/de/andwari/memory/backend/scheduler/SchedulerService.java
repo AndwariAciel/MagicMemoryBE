@@ -4,10 +4,13 @@ import static de.andwari.memory.backend.scheduler.db.entity.TaskStatus.ACTIVE;
 import static de.andwari.memory.backend.scheduler.db.entity.TaskStatus.INACTIVE;
 import static java.util.Optional.ofNullable;
 
+import de.andwari.memory.backend.mapper.TaskMapper;
+import de.andwari.memory.backend.model.rest.TimerModel;
 import de.andwari.memory.backend.scheduler.db.entity.TaskEntity;
 import de.andwari.memory.backend.scheduler.db.repository.TaskRepository;
 import de.andwari.memory.backend.scheduler.task.Task;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicReference;
@@ -22,17 +25,19 @@ public class SchedulerService {
     private final TaskScheduler taskScheduler;
     private final TaskProvider taskProvider;
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     private final Map<Task, AtomicReference<ScheduledFuture<?>>> scheduledTasks = new HashMap<>();
 
 
-    public SchedulerService(TaskProvider taskProvider, TaskRepository taskRepository) {
+    public SchedulerService(TaskProvider taskProvider, TaskRepository taskRepository, TaskMapper taskMapper) {
         var scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(1);
         scheduler.initialize();
         taskScheduler = scheduler;
         this.taskProvider = taskProvider;
         this.taskRepository = taskRepository;
+        this.taskMapper = taskMapper;
 
         initializeTasks();
     }
@@ -52,6 +57,10 @@ public class SchedulerService {
         }
     }
 
+    public void execute(Task name) {
+        taskProvider.getTask(name).run();
+    }
+
     public void stop(Task name) {
         ofNullable(scheduledTasks.get(name))
                 .map(future -> future.getAndSet(null))
@@ -69,6 +78,12 @@ public class SchedulerService {
     public void restart(Task name) {
         stop(name);
         start(name);
+    }
+
+    public List<TimerModel> getTimers() {
+        return taskRepository.findAll().stream()
+                .map(taskMapper::map)
+                .toList();
     }
 
     public void update(Task name, String cron) {
@@ -106,10 +121,10 @@ public class SchedulerService {
                 .forEach(task ->
                         scheduledTasks.put(
                                 task.getTask(),
-                                new AtomicReference<>(taskScheduler.schedule(
-                                        taskProvider.getTask(task.getTask()),
-                                        new CronTrigger(task.getCron())
-                                ))));
+                                new AtomicReference<>(
+                                        taskScheduler.schedule(
+                                                taskProvider.getTask(task.getTask()),
+                                                new CronTrigger(task.getCron())))));
 
     }
 

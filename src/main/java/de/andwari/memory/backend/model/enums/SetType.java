@@ -27,7 +27,8 @@ public enum SetType {
     PROMO("promo"),
     TOKEN("token"),
     MEMORABILIA("memorabilia"),
-    MINIGAME("minigame");
+    MINIGAME("minigame"),
+    ETERNAL("eternal");
 
     private final String type;
 

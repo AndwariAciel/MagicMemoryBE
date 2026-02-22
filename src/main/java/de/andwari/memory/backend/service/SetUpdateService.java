@@ -4,8 +4,10 @@ import de.andwari.memory.backend.db.repository.SetRepository;
 import de.andwari.memory.backend.mapper.SetMapper;
 import de.andwari.memory.backend.web.client.ScryfallClient;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class SetUpdateService {
@@ -17,6 +19,7 @@ public class SetUpdateService {
 
     public void updateSets() {
 
+        log.info("Started updateSets");
         scryfallClient.getAllSets()
                 .getData()
                 .stream()
@@ -31,5 +34,6 @@ public class SetUpdateService {
                                             }
                                         }, () -> setRepository.save(set))
                 );
+        log.info("Finished updateSets");
     }
 }

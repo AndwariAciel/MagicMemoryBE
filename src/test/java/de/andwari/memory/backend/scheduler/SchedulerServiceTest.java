@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import de.andwari.memory.backend.TestApplication;
 import de.andwari.memory.backend.config.TestConfig;
+import de.andwari.memory.backend.mapper.TaskMapper;
 import de.andwari.memory.backend.scheduler.db.entity.TaskStatus;
 import de.andwari.memory.backend.scheduler.db.repository.TaskRepository;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,8 @@ class SchedulerServiceTest {
     private TaskProvider taskProvider;
     @Autowired
     private SchedulerService schedulerService;
+    @Autowired
+    private TaskMapper taskMapper;
 
 
     @Test
@@ -71,7 +74,7 @@ class SchedulerServiceTest {
     void testInitializeAlreadyExists() {
 
         // Second invocation, should not create a new task, there is already one
-        new SchedulerService(taskProvider, taskRepository);
+        new SchedulerService(taskProvider, taskRepository, taskMapper);
         // Would fail if the task was created again
         taskRepository.findByTask(GET_SETS);
     }

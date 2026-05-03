@@ -10,5 +10,6 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface CardLayoutMapper {
 
     @ValueMapping(target = "NORMAL", source = "normal")
+    @ValueMapping(target = "TRANSFORM", source = "transform")
     CardLayout toLayout(String layout);
 }

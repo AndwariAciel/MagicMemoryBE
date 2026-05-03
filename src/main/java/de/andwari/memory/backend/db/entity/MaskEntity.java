@@ -50,4 +50,6 @@ public class MaskEntity {
     @JoinColumn(name = "mask_id")
     private List<ShapeEntity> shapes;
 
+    private Boolean standard;
+
 }

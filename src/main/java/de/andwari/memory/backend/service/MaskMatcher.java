@@ -11,10 +11,13 @@ import static de.andwari.memory.backend.model.enums.CardType.INSTANT;
 import static de.andwari.memory.backend.model.enums.CardType.LAND;
 import static de.andwari.memory.backend.model.enums.CardType.SORCERY;
 import static java.util.List.of;
+import static java.util.Optional.*;
 
 import de.andwari.memory.backend.db.entity.CardEntity;
 import de.andwari.memory.backend.db.entity.MaskEntity;
 import de.andwari.memory.backend.db.repository.MaskRepository;
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +31,7 @@ public class MaskMatcher {
 
     public void findFittingDefaultMask(CardEntity card) {
 
-        Optional<MaskEntity> result = Optional.empty();
+        Optional<MaskEntity> result = empty();
 
         var mana = convertMana(card.getManaCost());
 
@@ -48,6 +51,8 @@ public class MaskMatcher {
     }
 
     private long convertMana(String manaCost) {
+        if(Objects.isNull(manaCost))
+            return 0L;
         return Pattern.compile("\\{[^}]+}")
                 .matcher(manaCost)
                 .results()

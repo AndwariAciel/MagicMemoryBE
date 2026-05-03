@@ -10,12 +10,16 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface CardTypeMapper {
 
     @ValueMapping(target = "ARTIFACT", source = "Artifact")
+    @ValueMapping(target = "ARTIFACT", source = "Kindred Artifact")
     @ValueMapping(target = "CREATURE", source = "Creature")
     @ValueMapping(target = "ENCHANTMENT", source = "Enchantment")
+    @ValueMapping(target = "ENCHANTMENT", source = "Kindred Enchantment")
     @ValueMapping(target = "LAND", source = "Land")
     @ValueMapping(target = "PLANESWALKER", source = "Planeswalker")
     @ValueMapping(target = "INSTANT", source = "Instant")
+    @ValueMapping(target = "INSTANT", source = "Kindred Instant")
     @ValueMapping(target = "SORCERY", source = "Sorcery")
+    @ValueMapping(target = "SORCERY", source = "Kindred Sorcery")
     @ValueMapping(target = "ARTIFACT_CREATURE", source = "Artifact Creature")
     @ValueMapping(target = "BASIC_LAND", source = "Basic Land")
     @ValueMapping(target = "BATTLE", source = "Battle")

@@ -37,9 +37,11 @@ public class CardEntity {
     private String scryfallId;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private CardType cardType;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "varchar(255)")
     private CardLayout cardLayout;
 
     @ManyToOne

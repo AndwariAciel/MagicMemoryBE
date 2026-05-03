@@ -3,6 +3,7 @@ package de.andwari.memory.backend.mapper;
 import de.andwari.memory.backend.db.entity.CardEntity;
 import de.andwari.memory.backend.db.entity.SetEntity;
 import de.andwari.memory.backend.model.enums.CardType;
+import de.andwari.memory.backend.model.rest.CardModel;
 import de.andwari.memory.backend.model.scryfall.cards.CardData;
 import de.andwari.memory.backend.service.CardTypeService;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Setter
 @Mapper(componentModel = SPRING,
-        uses = CardLayoutMapper.class)
+        uses = {CardLayoutMapper.class, CardModelMapper.class})
 public abstract class CardMapper {
 
     @Autowired
@@ -36,4 +37,5 @@ public abstract class CardMapper {
     protected CardType getCardType(String cardType) {
         return cardTypeService.convertCardType(cardType);
     }
+
 }

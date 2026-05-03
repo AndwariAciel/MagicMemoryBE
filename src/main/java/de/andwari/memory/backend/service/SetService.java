@@ -1,15 +1,17 @@
 package de.andwari.memory.backend.service;
 
-import static de.andwari.memory.backend.model.enums.SetType.EXPANSION;
-
 import de.andwari.memory.backend.db.entity.CardEntity;
 import de.andwari.memory.backend.db.repository.CardRepository;
 import de.andwari.memory.backend.db.repository.SetRepository;
 import de.andwari.memory.backend.mapper.SetMapper;
+import de.andwari.memory.backend.model.rest.SetCardModel;
 import de.andwari.memory.backend.model.rest.SetModel;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+import static de.andwari.memory.backend.model.enums.SetType.EXPANSION;
 
 @Service
 @RequiredArgsConstructor
@@ -33,5 +35,12 @@ public class SetService {
                 .count();
         return setMapper.addReadyCards(set, readyCards);
 
+    }
+
+    public List<SetCardModel> getSetCards(String code) {
+        return cardRepository.findBySetCode(code)
+                .stream()
+                .map(setMapper::toCardModel)
+                .toList();
     }
 }

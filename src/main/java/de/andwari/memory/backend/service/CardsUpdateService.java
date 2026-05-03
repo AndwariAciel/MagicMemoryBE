@@ -1,6 +1,7 @@
 package de.andwari.memory.backend.service;
 
 import static de.andwari.memory.backend.service.QueryService.getSetSearch;
+import static java.lang.Boolean.FALSE;
 
 import de.andwari.memory.backend.db.entity.CardEntity;
 import de.andwari.memory.backend.db.repository.CardRepository;
@@ -50,9 +51,13 @@ public class CardsUpdateService {
                     if (dbCard.hashCode() != card.hashCode()) {
                         card.setId(dbCard.getId());
                         card.setMask(dbCard.getMask());
+                        card.setReady(FALSE);
                         cardRepository.save(card);
                     }
-                }, () -> cardRepository.save(card));
+                }, () -> {
+                    card.setReady(FALSE);
+                    cardRepository.save(card);
+                });
     }
 
 }

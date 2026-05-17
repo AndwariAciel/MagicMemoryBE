@@ -49,4 +49,9 @@ public class AppRestController {
         return setService.getSetCards(code);
     }
 
+    @PostMapping(value = "cards", produces = {"application/json"})
+    public void updateCard(@RequestBody CardModel card) {
+        cardService.updateCard(card);
+    }
+
 }

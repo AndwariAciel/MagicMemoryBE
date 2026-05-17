@@ -31,6 +31,7 @@ public abstract class SetMapper {
 
     public abstract SetModel toModel(SetEntity set);
 
+    @Mapping(target = "hasMask", expression = "java(card.getMask() != null)")
     public abstract SetCardModel toCardModel(CardEntity card);
 
     protected SetType getSetType(String type) {

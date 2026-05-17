@@ -12,7 +12,6 @@ import de.andwari.memory.backend.db.entity.ShapeEntity;
 import de.andwari.memory.backend.db.repository.MaskRepository;
 import de.andwari.memory.backend.model.enums.ShapeType;
 import jakarta.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,37 +22,24 @@ public class DefaultMaskInitializer {
 
     private final MaskRepository maskRepository;
 
-
     @PostConstruct
     public void init() {
         if (maskRepository.count() == 0) {
-            var masks = new ArrayList<MaskEntity>();
-            masks.add(createDFSpellM3(DEFAULT_SPELL_3M));
-            masks.add(createDFSpellM3(DEFAULT_CREATURE_3M));
-            maskRepository.saveAll(masks);
+            var mana = createShape(MANA, 375, 32, 90, 40);
+            var type = createShape(TYPE, 18, 380, 450, 42);
+            var text = createShape(TEXT, 18, 422, 450, 250);
+            var pt   = createShape(PT, 365, 602, 100, 48);
+
+            maskRepository.saveAll(List.of(
+                    MaskEntity.builder()
+                            .name(DEFAULT_SPELL_3M)
+                            .shapes(List.of(mana, type, text))
+                            .build(),
+                    MaskEntity.builder()
+                            .name(DEFAULT_CREATURE_3M)
+                            .shapes(List.of(mana, type, text, pt))
+                            .build()));
         }
-    }
-
-    private MaskEntity createDFSpellM3(String mask) {
-
-        return switch (mask) {
-            case DEFAULT_SPELL_3M -> MaskEntity.builder()
-                    .name(DEFAULT_SPELL_3M)
-                    .shapes(List.of(
-                            createShape(MANA, 375, 32, 90, 40),
-                            createShape(TYPE, 18, 380, 450, 42),
-                            createShape(TEXT, 18, 422, 450, 250)))
-                    .build();
-            case DEFAULT_CREATURE_3M -> MaskEntity.builder()
-                    .name(DEFAULT_CREATURE_3M)
-                    .shapes(List.of(
-                            createShape(MANA, 375, 32, 90, 40),
-                            createShape(TYPE, 18, 380, 450, 42),
-                            createShape(TEXT, 18, 422, 450, 250),
-                            createShape(PT, 365, 602, 100, 48)))
-                    .build();
-            default -> null;
-        };
     }
 
     private ShapeEntity createShape(ShapeType type, int x, int y, int w, int h) {
@@ -65,6 +51,5 @@ public class DefaultMaskInitializer {
                 .height(h)
                 .build();
     }
-
 
 }

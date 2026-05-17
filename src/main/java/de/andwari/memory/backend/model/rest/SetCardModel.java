@@ -5,7 +5,9 @@ public record SetCardModel(
         String scryfallId,
         String name,
         String pictureUri,
-        Boolean ready
+        Boolean ready,
+        Boolean hasMask,
+        Integer cardNumber
 ) {
 }
 

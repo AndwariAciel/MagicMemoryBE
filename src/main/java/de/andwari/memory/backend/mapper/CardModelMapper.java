@@ -20,4 +20,6 @@ public interface CardModelMapper {
 
     @Mapping(target = "set", source = "set.code")
     CardModel toModel(CardEntity card);
+
+    MaskEntity toEntity(MaskModel model);
 }

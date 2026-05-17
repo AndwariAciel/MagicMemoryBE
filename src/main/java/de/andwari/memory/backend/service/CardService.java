@@ -21,4 +21,12 @@ public class CardService {
                 .orElse(null);
     }
 
+    public void updateCard(CardModel card) {
+        cardRepository.findByScryfallId(card.scryfallId())
+                .ifPresent(entity -> {
+                    entity.setMask(mapper.toEntity(card.mask()));
+                    entity.setReady(card.ready());
+                    cardRepository.save(entity);
+                });
+    }
 }

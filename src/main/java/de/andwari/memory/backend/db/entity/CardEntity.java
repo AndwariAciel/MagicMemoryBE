@@ -49,12 +49,14 @@ public class CardEntity {
     private SetEntity set;
 
     private String pictureUri;
+
     private String manaCost;
 
     @ManyToOne
     @JoinColumn(name = "mask_id")
     @EqualsAndHashCode.Exclude
     private MaskEntity mask;
+
     private Boolean ready;
 
 

@@ -1,6 +1,5 @@
 package de.andwari.memory.backend.db.entity;
 
-import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 import jakarta.persistence.CascadeType;
@@ -9,7 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -46,8 +46,11 @@ public class MaskEntity {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = ALL, orphanRemoval = true)
-    @JoinColumn(name = "mask_id")
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "mask_shape",
+            joinColumns = @JoinColumn(name = "mask_id"),
+            inverseJoinColumns = @JoinColumn(name = "shape_id"))
     private List<ShapeEntity> shapes;
 
     private Boolean standard;

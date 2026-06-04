@@ -60,7 +60,7 @@ Schema is managed by Hibernate `hbm2ddl.auto: update` — no migration framework
 | GET | `/admin/sets` | All sets filtered to EXPANSION type, with ready card count |
 | GET | `/admin/cards/{scryfallId}` | Fetch one card by Scryfall ID |
 | GET | `/admin/cards?code=<code>` | All cards for a set |
-| POST | `/admin/cards` | Update a card's mask and ready status |
+| POST | `/admin/cards` | Update a card's shapes and ready status |
 
 ### `TimerRestController` — `/timer`
 | Method | Path | Purpose |
@@ -81,10 +81,10 @@ CORS: all controllers allow `http://localhost:4200`.
 ## Key Domain Concepts
 
 - **Set** — A Magic card set synced from Scryfall; only `EXPANSION` type sets are exposed to the frontend.
-- **Card** — Belongs to a Set; has `cardType`, `cardLayout`, `mask`, `ready`, `pictureUri`, `manaCost`.
-- **Mask** — Named collection of `Shape` entities; defines image regions for the memory game.
-- **Shape** — A rectangular region (x, y, width, height) of type `ShapeType` (MANA, TYPE, TEXT, PT, LOYALTY).
-- **MaskMatcher** — Auto-assigns a default mask to a card when: layout is NORMAL and mana cost ≤ 3. Creatures/artifact-creatures get the creature mask; spells/artifacts/land/enchantment/instant/sorcery get the spell mask.
+- **Card** — Belongs to a Set; has `cardType`, `cardLayout`, `shapes`, `ready`, `pictureUri`, `manaCost`. Shapes are stored directly on the card (ManyToMany via `card_shape` join table).
+- **Mask** — Named collection of `Shape` entities used only as assignment templates; not stored on cards directly.
+- **Shape** — A rectangular region (x, y, width, height) of type `ShapeType` (MANA, TYPE, TEXT, PT, LOYALTY). Shared across cards and masks via join tables.
+- **MaskMatcher** — On initial card sync, copies shapes from a matching default mask onto the card. Runs when: layout is NORMAL and mana cost ≤ 3. Creatures/artifact-creatures get the creature mask shapes; spells/artifacts/land/enchantment/instant/sorcery get the spell mask shapes.
 - **DefaultMaskInitializer** — `@PostConstruct` bean that seeds two default masks if the DB is empty: `DEFAULT_SPELL_3M` (mana, type, text shapes) and `DEFAULT_CREATURE_3M` (mana, type, text, pt shapes).
 
 ## Services
@@ -94,9 +94,9 @@ CORS: all controllers allow `http://localhost:4200`.
 | `SetUpdateService` | Syncs Magic sets from Scryfall `/sets` endpoint |
 | `CardsUpdateService` | Syncs cards for a set (paginated; 100ms sleep between pages to respect rate limits) |
 | `SetService` | Queries sets filtered by EXPANSION, counts ready cards |
-| `CardService` | Retrieves/updates individual cards |
+| `CardService` | Retrieves/updates individual cards; loads shapes by ID from `ShapeRepository` on update |
 | `ShapeService` | CRUD for Shape entities |
-| `MaskMatcher` | Auto-assigns default masks based on card type/layout/cost |
+| `MaskMatcher` | Copies shapes from a default mask onto a card based on type/layout/cost (initial sync only) |
 | `DefaultMaskInitializer` | Seeds default masks on startup |
 | `CardTypeService` | Converts Scryfall type strings → CardType enum (handles "Legendary" prefix) |
 | `QueryService` | URL-encodes Scryfall search queries |
@@ -108,8 +108,8 @@ CORS: all controllers allow `http://localhost:4200`.
 | Entity | Table | Key Fields |
 |--------|-------|-----------|
 | `SetEntity` | `set` | scryfallId, code, name, url, type (SetType), releaseDate, cards (count), iconUrl, released |
-| `CardEntity` | `card` | scryfallId, name, cardType (enum), cardLayout (enum), set (FK→Set), pictureUri, manaCost, mask (FK→Mask, nullable), ready |
-| `MaskEntity` | `mask` | name (unique), standard, shapes (ManyToMany via `mask_shape`) |
+| `CardEntity` | `card` | scryfallId, name, cardType (enum), cardLayout (enum), set (FK→Set), pictureUri, manaCost, shapes (ManyToMany via `card_shape`), ready |
+| `MaskEntity` | `mask` | name (unique), standard, shapes (ManyToMany via `mask_shape`) — template only, not referenced by cards |
 | `ShapeEntity` | `shape` | type (ShapeType), x, y, width, height |
 | `TaskEntity` | `task` | task (Task enum: GET_SETS / DUMMY), status (ACTIVE / INACTIVE), cron |
 
@@ -131,7 +131,7 @@ All entities have `createdAt` / `updatedAt` timestamps.
 |--------|---------|
 | `SetMapper` | CardEntity ↔ Scryfall Set response ↔ SetModel |
 | `CardMapper` | Scryfall CardData → CardEntity (uses CardTypeService, CardLayoutMapper) |
-| `CardModelMapper` | CardEntity ↔ CardModel / MaskModel / ShapeModel |
+| `CardModelMapper` | CardEntity ↔ CardModel / ShapeModel |
 | `CardLayoutMapper` | String → CardLayout enum (normal, transform) |
 | `CardTypeMapper` | String → CardType enum (14 value mappings) |
 | `TaskMapper` | TaskEntity → TimerModel |

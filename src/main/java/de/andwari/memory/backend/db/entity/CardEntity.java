@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
@@ -52,10 +53,13 @@ public class CardEntity {
 
     private String manaCost;
 
-    @ManyToOne
-    @JoinColumn(name = "mask_id")
+    @ManyToMany
+    @JoinTable(
+            name = "card_shape",
+            joinColumns = @JoinColumn(name = "card_id"),
+            inverseJoinColumns = @JoinColumn(name = "shape_id"))
     @EqualsAndHashCode.Exclude
-    private MaskEntity mask;
+    private List<ShapeEntity> shapes;
 
     private Boolean ready;
 

@@ -50,7 +50,7 @@ public class CardsUpdateService {
                 .ifPresentOrElse(dbCard -> {
                     if (dbCard.hashCode() != card.hashCode()) {
                         card.setId(dbCard.getId());
-                        card.setMask(dbCard.getMask());
+                        card.setShapes(dbCard.getShapes());
                         card.setReady(FALSE);
                         cardRepository.save(card);
                     }

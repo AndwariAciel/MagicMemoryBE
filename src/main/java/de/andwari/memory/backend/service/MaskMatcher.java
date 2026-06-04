@@ -17,11 +17,13 @@ import de.andwari.memory.backend.db.entity.CardEntity;
 import de.andwari.memory.backend.db.entity.MaskEntity;
 import de.andwari.memory.backend.db.repository.MaskRepository;
 
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +31,7 @@ public class MaskMatcher {
 
     private final MaskRepository maskRepository;
 
+    @Transactional
     public void findFittingDefaultMask(CardEntity card) {
 
         Optional<MaskEntity> result = empty();
@@ -47,7 +50,7 @@ public class MaskMatcher {
             }
         }
 
-        result.ifPresent(card::setMask);
+        result.ifPresent(mask -> card.setShapes(new ArrayList<>(mask.getShapes())));
     }
 
     private long convertMana(String manaCost) {

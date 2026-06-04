@@ -26,12 +26,13 @@ public abstract class SetMapper {
     @Mapping(ignore = true, target = "released")
     public abstract SetEntity toEntity(Set set);
 
+    @Mapping(target = "cards", source = "cards")
     @Mapping(target = "cardsReady", source = "cardsReady")
-    public abstract SetModel addReadyCards(SetModel set, long cardsReady);
+    public abstract SetModel addReadyCards(SetModel set, long cards, long cardsReady);
 
     public abstract SetModel toModel(SetEntity set);
 
-    @Mapping(target = "hasMask", expression = "java(card.getMask() != null)")
+    @Mapping(target = "hasShapes", expression = "java(card.getShapes() != null && !card.getShapes().isEmpty())")
     public abstract SetCardModel toCardModel(CardEntity card);
 
     protected SetType getSetType(String type) {

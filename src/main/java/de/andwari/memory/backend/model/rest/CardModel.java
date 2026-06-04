@@ -3,6 +3,8 @@ package de.andwari.memory.backend.model.rest;
 import de.andwari.memory.backend.model.enums.CardLayout;
 import de.andwari.memory.backend.model.enums.CardType;
 
+import java.util.List;
+
 public record CardModel(
         String name,
         String scryfallId,
@@ -11,7 +13,7 @@ public record CardModel(
         String set,
         String pictureUri,
         String manaCost,
-        MaskModel mask,
+        List<ShapeModel> shapes,
         Boolean ready
 ) {
 }

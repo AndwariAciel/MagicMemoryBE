@@ -8,6 +8,7 @@ import de.andwari.memory.backend.model.rest.SetCardModel;
 import de.andwari.memory.backend.model.rest.SetModel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,13 +31,13 @@ public class SetService {
     }
 
     private SetModel getReadyCards(SetModel set) {
-        var readyCards = cardRepository.findBySetCode(set.code()).stream()
-                .filter(CardEntity::getReady)
-                .count();
-        return setMapper.addReadyCards(set, readyCards);
-
+        var cards = cardRepository.findBySetCode(set.code());
+        long totalCards = cards.size();
+        long readyCards = cards.stream().filter(CardEntity::getReady).count();
+        return setMapper.addReadyCards(set, totalCards, readyCards);
     }
 
+    @Transactional(readOnly = true)
     public List<SetCardModel> getSetCards(String code) {
         return cardRepository.findBySetCode(code)
                 .stream()

@@ -6,7 +6,7 @@ public record SetCardModel(
         String name,
         String pictureUri,
         Boolean ready,
-        Boolean hasMask,
+        Boolean hasShapes,
         Integer cardNumber
 ) {
 }

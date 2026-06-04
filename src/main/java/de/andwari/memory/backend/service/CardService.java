@@ -1,6 +1,7 @@
 package de.andwari.memory.backend.service;
 
 import de.andwari.memory.backend.db.repository.CardRepository;
+import de.andwari.memory.backend.db.repository.ShapeRepository;
 import de.andwari.memory.backend.mapper.CardModelMapper;
 import de.andwari.memory.backend.model.rest.CardModel;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CardService {
 
     private final CardRepository cardRepository;
+    private final ShapeRepository shapeRepository;
     private final CardModelMapper mapper;
 
     @Transactional(readOnly = true)
@@ -24,7 +26,10 @@ public class CardService {
     public void updateCard(CardModel card) {
         cardRepository.findByScryfallId(card.scryfallId())
                 .ifPresent(entity -> {
-                    entity.setMask(mapper.toEntity(card.mask()));
+                    var shapeIds = card.shapes().stream()
+                            .map(s -> s.id().longValue())
+                            .toList();
+                    entity.setShapes(shapeRepository.findAllById(shapeIds));
                     entity.setReady(card.ready());
                     cardRepository.save(entity);
                 });

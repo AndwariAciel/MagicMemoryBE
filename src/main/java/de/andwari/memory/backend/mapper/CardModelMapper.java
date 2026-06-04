@@ -22,4 +22,6 @@ public interface CardModelMapper {
     CardModel toModel(CardEntity card);
 
     MaskEntity toEntity(MaskModel model);
+
+    ShapeEntity toEntity(ShapeModel model);
 }
